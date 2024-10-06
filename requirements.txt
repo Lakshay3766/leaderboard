@@ -1,7 +1,5 @@
-streamlit==1.20.0  # or your current version
-pandas==1.5.3      # for data manipulation
-numpy==1.23.4      # for numerical computations
-matplotlib==3.6.1   # for plotting
-seaborn==0.12.2     # for statistical data visualization
-requests==2.28.1    # if you make HTTP requests
-# Add any other packages you use
+requests
+beautifulsoup4
+pandas
+streamlit
+sqlite3
