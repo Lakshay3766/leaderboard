@@ -601,7 +601,7 @@ st.sidebar.markdown(
     "For more details about the event and additional resources, visit our [LinkTree](https://linktr.ee/gdsc_piet)."
 )
 
-st.markdown("""
+st.markdown(""" 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
@@ -679,34 +679,37 @@ st.markdown("""
             -webkit-text-fill-color: transparent;
         }
 
-        /* Table style */
-        table {
-            width: 100%;  /* Full width */
-            border-collapse: collapse;  /* Remove space between cells */
+        /* Responsive table styling */
+        .data {
+            margin: auto; /* Center the table */
+            width: 80%; /* Set the width for larger screens */
         }
 
-        th, td {
-            padding: 10px;  /* Cell padding */
-            text-align: left;  /* Align text to the left */
-            border: 1px solid #ddd;  /* Border style */
-            flex: 1;  /* Allow columns to grow equally */
-        }
-
-        th {
-            background-color: #4facfe;  /* Header background color */
-            color: white;  /* Header text color */
-        }
-
-        /* Media Query for mobile responsiveness */
-        @media only screen and (max-width: 600px) {
+        @media (max-width: 768px) {
             h1 {
-                font-size: 2em;  /* Smaller title font size */
-                margin: 30px 0 15px 0;  /* Adjust margin for smaller screens */
+                font-size: 2em;  /* Adjust font size for mobile devices */
+                white-space: normal; /* Allow wrapping on smaller screens */
             }
 
-            th, td {
-                padding: 5px;  /* Reduced cell padding for smaller screens */
-                font-size: 0.9em;  /* Smaller font size for table cells */
+            .data {
+                width: 90%; /* Decrease the width for mobile devices */
+                margin: auto; /* Center the table */
+            }
+
+            .data th, .data td {
+                font-size: 0.8em; /* Decrease font size for mobile devices */
+                padding: 8px; /* Adjust padding for smaller screens */
+            }
+        }
+
+        @media (min-width: 769px) {
+            .data {
+                width: 100%; /* Full width for larger screens */
+            }
+
+            .data th, .data td {
+                font-size: 1em; /* Standard font size for larger screens */
+                padding: 12px; /* Adjust padding for better spacing */
             }
         }
     </style>
@@ -715,6 +718,7 @@ st.markdown("""
     <div class="divider"></div>
     
 """, unsafe_allow_html=True)
+
 
 # Display the leaderboard if data is available
 if not leaderboard_df.empty:
