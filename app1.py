@@ -678,16 +678,48 @@ st.markdown("""
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
+        /* Table style */
+        table {
+            width: 100%;  /* Full width */
+            border-collapse: collapse;  /* Remove space between cells */
+        }
+
+        th, td {
+            padding: 10px;  /* Cell padding */
+            text-align: left;  /* Align text to the left */
+            border: 1px solid #ddd;  /* Border style */
+            flex: 1;  /* Allow columns to grow equally */
+        }
+
+        th {
+            background-color: #4facfe;  /* Header background color */
+            color: white;  /* Header text color */
+        }
+
+        /* Media Query for mobile responsiveness */
+        @media only screen and (max-width: 600px) {
+            h1 {
+                font-size: 2em;  /* Smaller title font size */
+                margin: 30px 0 15px 0;  /* Adjust margin for smaller screens */
+            }
+
+            th, td {
+                padding: 5px;  /* Reduced cell padding for smaller screens */
+                font-size: 0.9em;  /* Smaller font size for table cells */
+            }
+        }
     </style>
 
-    <h1>🚀 GDG PIET LEADERBOARD 🚀</h1> <!-- Title should fit in one line -->
+    <h1>🚀LEADERBOARD 🚀</h1> <!-- Title should fit in one line -->
     <div class="divider"></div>
     
 """, unsafe_allow_html=True)
 
 # Display the leaderboard if data is available
 if not leaderboard_df.empty:
-    st.table(leaderboard_df[['Rank', 'Name', 'League', 'Points']].set_index('Rank')) 
+    # Render the DataFrame as an HTML table
+    st.write(leaderboard_df[['Rank', 'Name', 'League', 'Points']].set_index('Rank').to_html(classes='data', header="true", index=True, escape=False), unsafe_allow_html=True)
 
 # Display perks for the top 5 users only
 st.markdown("""
