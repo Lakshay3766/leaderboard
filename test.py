@@ -1,48 +1,55 @@
-import matplotlib.pyplot as plt
-import networkx as nx
+import requests
+import json
 
-def create_mind_map():
-    # Initialize the directed graph
-    mind_map = nx.DiGraph()
+# Your Discord webhook URL
+WEBHOOK_URL = 'https://discord.com/api/webhooks/1282503600160903259/rOiYaHh8yMs6nH5TZktiV562Dkbj2wzVxq6N-u2URgqfeQDRFFoLJ7dv_sFLRAjAevDq'  # Replace with your actual webhook URL
 
-    # Define the nodes and their hierarchical relationships
-    mind_map.add_edges_from([
-        ("Main Idea", "Sub Idea 1"),
-        ("Main Idea", "Sub Idea 2"),
-        ("Main Idea", "Sub Idea 3"),
-        ("Sub Idea 1", "Detail 1.1"),
-        ("Sub Idea 1", "Detail 1.2"),
-        ("Sub Idea 2", "Detail 2.1"),
-        ("Sub Idea 2", "Detail 2.2"),
-        ("Sub Idea 3", "Detail 3.1"),
-        ("Sub Idea 3", "Detail 3.2"),
-        ("Detail 1.1", "Note 1"),
-        ("Detail 2.1", "Note 2"),
-        ("Detail 3.1", "Note 3"),
-    ])
+# The URL of your Streamlit API running on localhost
+API_URL = 'http://localhost:8501/?json=1'  # Use localhost
 
-    # Set up plot
-    plt.figure(figsize=(8, 8))
+def post_leaderboard_to_discord():
+    print("Fetching leaderboard data from API...")
+    try:
+        # Fetch the leaderboard data from your Streamlit API
+        response = requests.get(API_URL)
 
-    # Create the layout for the nodes (spring layout makes it look like a mind map)
-    pos = nx.spring_layout(mind_map, k=0.8, seed=42)
+        # Print the status code of the response
+        print(f"API response status code: {response.status_code}")
+        
+        # Print the raw response for debugging
+        print("Raw response from API:", response.text)
+        
+        # Check if the request was successful
+        if response.status_code != 200:
+            print(f"Failed to fetch data from API: {response.status_code}")
+            return
 
-    # Draw nodes
-    nx.draw_networkx_nodes(mind_map, pos, node_size=2000, node_color='lightblue', node_shape='o', alpha=0.9)
+        leaderboard_data = json.loads(response.text)
 
-    # Draw edges
-    nx.draw_networkx_edges(mind_map, pos, edge_color='gray', width=2, alpha=0.5)
+        # Format the leaderboard message
+        leaderboard_message = "🚀 **Leaderboard** 🚀\n\n"
+        for entry in leaderboard_data:
+            leaderboard_message += f"**{entry['Rank']}. {entry['Name']}** - {entry['League']} - {entry['Points']} points\n"
 
-    # Draw labels
-    nx.draw_networkx_labels(mind_map, pos, font_size=10, font_color='black', font_family='sans-serif')
+        # Create the payload for the webhook
+        payload = {
+            "content": leaderboard_message
+        }
 
-    # Set the title
-    plt.title("Professional Mind Map", fontsize=16)
-    
-    # Remove axis
-    plt.axis('off')
-    
-    # Show the mind map
-    plt.show()
+        # Send the POST request to the Discord webhook
+        webhook_response = requests.post(WEBHOOK_URL, json=payload)
+        
+        # Print the status code and response content of the webhook request
+        print(f"Webhook response status code: {webhook_response.status_code}")
+        print("Webhook response content:", webhook_response.text)
 
-create_mind_map()
+        if webhook_response.status_code == 204:
+            print("Leaderboard posted to Discord successfully!")
+        else:
+            print(f"Failed to post to Discord: {webhook_response.status_code}")
+
+    except Exception as e:
+        print("Failed to post leaderboard to Discord:", e)
+
+# Call the function to post the leaderboard
+post_leaderboard_to_discord()
